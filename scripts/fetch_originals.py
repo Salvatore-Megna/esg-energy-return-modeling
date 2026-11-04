@@ -1,8 +1,4 @@
-"""Download ONLY 3 authenticated historical data files from the existing public GitHub site.
-
-These files are NOT redistributed inside this review ZIP. Please check third-party
-license terms before including any ESG score panel in a public repository.
-"""
+"""Retrieve the three input files and check their recorded Git blob hashes."""
 from __future__ import annotations
 
 import hashlib

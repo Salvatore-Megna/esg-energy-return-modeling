@@ -1,69 +1,67 @@
-# ESG Scores and Energy Equity Returns (2013–2024)
+# ESG Scores and Relative Returns in the Energy Sector
 
-**Energy finance · Random Forest · Leakage-aware time-series evaluation · Information ratio**
+An analysis of 12 energy companies in the US and Europe between 2013 and 2024. I examine whether monthly ESG scores help predict returns relative to sector benchmarks, and compare the risk-adjusted returns of utility and oil & gas portfolios.
 
-A reproducible reanalysis of 12 energy stocks across the United States and Europe, using historical E/S/G scores, monthly stock prices, and area-specific sector benchmark returns. The 2025 academic study is preserved as a **historical record**; this repository contains an explicitly revised Python pipeline and a separate report of the corrected evaluation.
+The project uses Random Forest regression for the forecasting exercise and an annualized information ratio for the portfolio comparison.
 
-> **Status: computationally validated, private review candidate.** [GitHub Actions run 41822713577](https://github.com/Salvatore-Megna/esg-energy-return-modeling/actions/runs/41822713577) successfully executed the seven methodology tests, downloaded and hash-verified all three original inputs, and recomputed the results below. Publication is pending review of third-party data rights, benchmark construction, and the final report. No causal ESG effect is claimed.
+[Read the report (PDF)](report/report.pdf) · [Detailed results](docs/results.md)
 
-## Key findings
+## Data and sample
 
-- Under a **calendar-month holdout with 12-month label purging**, the Random Forest has **negative test R² in five of six period × area groups** and underperforms a train-only mean baseline in those five groups.
-- **USA, 2017–2020** is the sole positive group: test R² = **0.396** (baseline −0.169), MAE = **0.195** (baseline 0.272). This is a small, exploratory holdout of **eight distinct months**, not proof of stable forecasting skill.
-- In **Europe, 2017–2020**, the High-minus-Low annualized relative information ratio is **1.676**, with six-month paired block-bootstrap 95% interval **[0.196, 3.247]** and an approximate, unadjusted p-value **0.033**. This should not be interpreted as an isolated ESG premium: the predefined groups also differ fundamentally between utilities and oil & gas.
+| | United States | Europe |
+|---|---|---|
+| Utilities / transition | NextEra Energy, Xcel Energy, Duke Energy | Enel, Iberdrola, E.ON |
+| Oil & gas | Exxon Mobil, Chevron, Occidental Petroleum | TotalEnergies, BP, ENI |
 
-[Read the updated analysis report](report/report.pdf) · [Full results and test sizes](docs/EMPIRICAL_RESULTS.md) · [View the authenticated-data CI run](https://github.com/Salvatore-Megna/esg-energy-return-modeling/actions/runs/41822713577)
+The input files cover monthly prices, sector-benchmark returns and E, S, G and overall ESG scores. I consider three periods: **2013–2016**, **2017–2020** and **2021–2024**.
 
-## Study and methods
+The two groups are defined by business activity, not by an estimated cutoff in ESG scores. This matters when interpreting differences between them. [Data sources and file details](data/README.md).
 
-| Component | Description |
-|---|---|
-| Assets | 12 stocks (6 US, 6 European) |
-| Periods | 2013–2016, 2017–2020, 2021–2024 |
-| Inputs | Monthly stock prices, two area benchmark series, E/S/G and total ESG scores |
-| Target | **Arithmetic sum** of the next 12 monthly stock-minus-sector returns, inside each period |
-| Features | E, S, G, total ESG, all lagged one calendar month |
-| Model | RandomForestRegressor (400 trees, fixed seed), fitted separately per period × area |
-| Validation | Unique-month holdout; purge training labels overlapping the test; train-only mean baseline |
-| Secondary analysis | Equal-weight High/Low group information ratios; paired six-month block bootstrap |
+## Results
 
-The original notebook split ticker–month **rows**, potentially sharing the same calendar month across train and test, and did not purge overlapping forward targets. The corrected analysis retains the original universe and sector-benchmark specification but chooses a single holdout by *distinct months*. All training observations whose 12-month label reaches the first test month are removed. The targets are also restricted to 12 consecutive months within each historical period. The resulting train set contains **16 distinct months** in each model; the test sets contain **7–8 months**.
+- Random Forest test R² is **negative in five of the six** period–region combinations. The only positive result is for the US in 2017–2020 (**R² = 0.396**); that test covers just eight distinct months, so the finding needs further validation.
+- In Europe in 2017–2020, the difference between the two portfolios' annualized information ratios is **1.676** (95% block-bootstrap interval **0.196 to 3.247**). The result is exploratory: the groups differ by industry, and the six comparisons have not been corrected for multiple testing.
+- Across the other periods, the portfolio differences are less conclusive. The study does not establish a causal ESG premium.
 
-The measure called “relative Sharpe” in the original study is more precisely an **annualized information ratio**, as the reference is the sector index, not the risk-free rate. The revised paired block bootstrap preserves both group alignment and some monthly dependence; its p-values are exploratory and **not adjusted for six comparisons**.
+## Method
 
-## Reproduce
+Monthly stock returns are calculated from the available price series and expressed relative to a benchmark for each region. The prediction target is the **sum of the following 12 monthly relative returns**; E, S, G and overall ESG scores enter with a one-month lag.
 
-From the project root, with **Python 3.11+** and internet access to the already-public historical repository:
+Six Random Forest models (400 trees each) are fitted separately by period and region. Training and test sets are separated by **calendar month**, and training observations are removed when their forward-looking target reaches into the test period. Performance is compared against the mean target observed in training. The portfolio analysis uses equal-weight monthly returns and a paired six-month block bootstrap.
+
+Details of the temporal split, the bootstrap procedure and differences from the earlier notebook are in [methodology notes](docs/methodology.md).
+
+## Run the analysis
+
+Python 3.11 or later is recommended. From the repository root:
 
 ```bash
 python -m pip install -r requirements.txt
-python -m unittest discover -s tests -p 'test_*.py' -v
 python scripts/fetch_originals.py
 python src/esg_analysis.py
 ```
 
-The fetch script obtains three **authentic** source files from the historical GitHub site, checking byte lengths and Git blob SHA-1 hashes against the recovery manifest before use. No synthetic patient, market, or ESG data are included in the empirical analysis; synthetic records are used **only in isolated unit tests**. The data are deliberately **not duplicated** in this repository because the ESG data provider's redistribution permissions have not been verified.
+The input script downloads the three source files from the [earlier project archive](https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/tree/main/projects/esg-performance/assets) and checks their recorded Git blob hashes. They are not committed here because redistribution permissions for the ESG panel have not been confirmed.
 
-The script regenerates four CSVs inside the ignored `outputs/` directory: `panel_integrity.csv`, `rf_purged_holdout.csv`, `rf_importance_heldout.csv` and `sharpe_block_bootstrap.csv`. The same four files are downloadable as a [GitHub Actions run artifact](https://github.com/Salvatore-Megna/esg-energy-return-modeling/actions/runs/41822713577/artifacts/13318280263) (requires access to this private repository).
+Results are saved as CSV files under `outputs/`. To run the checks:
 
-## Repository map
-
-```text
-src/esg_analysis.py          Canonical revised empirical analysis
-scripts/fetch_originals.py  Retrieve and authenticate three original inputs
-tests/                     Methodology and synthetic integration checks
-report/main.tex             Revised scientific report (IVPS LaTeX styling)
-report/report.pdf            Typeset report of the verified evaluation
-report/main_historical.tex  Historical 2025 report retypeset in the same style
-docs/                      Actual results, scientific audit and source manifest
-data/README.md              Input provenance and redistribution caution
-.github/workflows/          Real-data and unit-test reproducibility checks
+```bash
+python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-The [original 2025 notebook and report](https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/tree/main/projects/esg-performance/assets) remain available on the existing portfolio site. The later alternative with a **US stock-mean benchmark** is intentionally *not* merged with the sector-benchmark study.
+The analysis and tests also run in [GitHub Actions](https://github.com/Salvatore-Megna/esg-energy-return-modeling/actions/runs/41823752182).
 
-## Interpretation and limitations
+## Files
 
-This is an **observational, exploratory** comparison, not a trading system and not evidence that ESG ratings cause returns. The “High” and “Low” groups were selected by **business type** (utilities/transitional vs oil & gas), not by a data-driven ESG-score threshold. Potential confounding by industry, commodity prices, interest rates and risk exposures is substantial. Other limitations include overlapping forward labels inside test samples, small effective temporal sample sizes, unverified historical *availability timestamps* of ESG scores, potentially non-total-return price series, and benchmark source definitions not yet independently traced to ETF data. The bootstrap depends on block length and multiple comparisons.
+| Location | Contents |
+|---|---|
+| `src/esg_analysis.py` | Data preparation, models and portfolio analysis |
+| `scripts/fetch_originals.py` | Source-file retrieval and checks |
+| `report/` | LaTeX report and compiled PDF |
+| `docs/results.md` | Full results by period and region |
+| `docs/methodology.md` | Method choices and limitations |
+| `tests/` | Unit and integration tests |
 
-The report and code do **not** represent the original 2025 model results as newly validated. Original results have their own provenance in the historical report; **new model metrics** and methodological differences are documented here.
+## Limitations
+
+This is a small observational study. Overlapping 12-month targets, short test windows, sector differences and the treatment of dividends all limit the conclusions. The precise construction of the benchmark files and the dates on which ESG scores became available have not been independently established. The reported bootstrap intervals depend on the block length; they are not evidence of causality.

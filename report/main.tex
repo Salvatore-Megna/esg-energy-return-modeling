@@ -1,8 +1,5 @@
 \documentclass[12pt,a4paper]{article}
 
-% Stesse impostazioni tipografiche e di pagina del report IVPS.
-% Revisione scientifica (novembre 2026) del report ESG originale (settembre 2025).
-% Preambolo tipografico identico al report IVPS: 12pt Computer Modern, margini 2.7/2.5 cm.
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
@@ -105,11 +102,11 @@ In sintesi, il campione offre un confronto descrittivo tra sei titoli statuniten
 
 \section{Metodologia}
 
-L'analisi integra prezzi mensili, rendimenti di due benchmark settoriali e punteggi ESG, per poi distinguere due livelli: la previsione a 12 mesi dei rendimenti relativi e il confronto \textit{ex post} dei profili rendimento--rischio dei gruppi High e Low. In questa versione il calcolo degli indicatori conserva la definizione storica, ma vengono corretti il disegno della validazione temporale e la procedura bootstrap. Di conseguenza, le stime aggiornate non sono direttamente confrontabili con i risultati numerici del documento originale del 2025.
+L'analisi integra prezzi mensili, rendimenti di due benchmark settoriali e punteggi ESG, per poi distinguere due livelli: la previsione a 12 mesi dei rendimenti relativi e il confronto \textit{ex post} dei profili rendimento--rischio dei gruppi High e Low. La valutazione predittiva utilizza una suddivisione temporale dei dati, mentre il confronto fra i portafogli è accompagnato da intervalli di confidenza ottenuti con bootstrap a blocchi.
 
 \subsection{Dataset e rendimenti relativi}
 
-Le tre basi informative sono le serie mensili dei prezzi dei 12 titoli, i rendimenti dei benchmark delle aree USA ed Europa e i punteggi E, S, G e ESG complessivo. La documentazione storica identifica i benchmark come XLE ed EXH1.DE e attribuisce i punteggi ESG a Sustainalytics e i prezzi a Yahoo Finance. Queste attribuzioni provengono dal lavoro originale: la costruzione esatta dei file e le condizioni di utilizzo del panel ESG non sono state sottoposte a una nuova verifica indipendente.
+Le tre basi informative sono le serie mensili dei prezzi dei 12 titoli, i rendimenti dei benchmark delle aree USA ed Europa e i punteggi E, S, G e ESG complessivo. I file impiegati riportano benchmark riferiti a XLE per gli USA e a EXH1.DE per l'Europa, punteggi ESG attribuiti a Sustainalytics e prezzi di Yahoo Finance. La composizione delle serie benchmark e le condizioni di utilizzo dei dati ESG richiedono ulteriori verifiche.
 
 Le date sono armonizzate a fine mese; si escludono osservazioni duplicate o prive di rendimenti mensili consecutivi. Il rendimento relativo per titolo $i$ e mese $t$ è definito come
 \begin{equation}
@@ -119,13 +116,13 @@ dove $a(i)$ identifica l'area. I prezzi archiviati non sono stati verificati com
 
 \subsection{Random Forest e validazione temporale}
 
-Per ogni titolo e data $t$ il target è la somma \emph{aritmetica} dei dodici rendimenti relativi dei mesi successivi, mantenendo la definizione del notebook storico:
+Per ogni titolo e data $t$ il target è la somma \emph{aritmetica} dei dodici rendimenti relativi dei mesi successivi:
 \begin{equation}
 y_{i,t}^{(12)}=\sum_{k=1}^{12}r^{\mathrm{rel}}_{i,t+k}.
 \end{equation}
 Questa somma non equivale a un rendimento composto. Le variabili esplicative sono i quattro punteggi ESG al mese precedente: $E_{t-1},S_{t-1},G_{t-1},ESG_{t-1}$. I target sono costruiti solo quando sono disponibili tutti i dodici mesi consecutivi e non oltrepassano i confini dei periodi definiti.
 
-Stimiamo sei Random Forest separati (tre periodi $\times$ due aree, 400 alberi). Contrariamente allo split sulle righe del notebook storico, il campione di test è qui scelto in base agli \emph{ultimi mesi distinti}, senza dividere titoli dello stesso mese tra train e test. Dalle osservazioni del training vengono inoltre escluse tutte quelle il cui intervallo futuro del target raggiunge il primo mese del test: è il \emph{purging} delle etichette sovrapposte. Il riferimento di confronto è una previsione costante pari alla media del target nel solo training. Per modello e riferimento si riportano $R^2$ e MAE sui medesimi dati di test.
+Stimiamo sei Random Forest separati (tre periodi $\times$ due aree, 400 alberi). Il campione di test è scelto in base agli \emph{ultimi mesi distinti}, senza dividere titoli dello stesso mese tra train e test. Dalle osservazioni del training vengono inoltre escluse tutte quelle il cui intervallo futuro del target raggiunge il primo mese del test: è il \emph{purging} delle etichette sovrapposte. Il riferimento di confronto è una previsione costante pari alla media del target nel solo training. Per modello e riferimento si riportano $R^2$ e MAE sui medesimi dati di test.
 
 La procedura evita il contatto temporale diretto tra etichette di training e inizio del test; non elimina però la sovrapposizione dei target \emph{all'interno} del test, né l'esposizione delle imprese agli stessi fattori economici. Pertanto il numero di righe osservate non rappresenta un corrispondente numero di mesi indipendenti e i risultati restano esplorativi. La \textit{permutation importance} calcolata sul test è una misura descrittiva della dipendenza del modello dalle variabili, non una misura di causalità.
 
@@ -136,7 +133,7 @@ Per ogni combinazione periodo $\times$ area $\times$ gruppo ESG costruiamo il re
 IR_{a,g}=\frac{\overline{r}^{\,\mathrm{rel}}_{a,g}}{s(r^{\mathrm{rel}}_{a,g})}\sqrt{12},
 \qquad \Delta IR_a=IR_{a,\mathrm{High}}-IR_{a,\mathrm{Low}}.
 \end{equation}
-La differenza $\Delta IR$ viene stimata sugli stessi mesi per entrambi i gruppi. L'incertezza è valutata con 5.000 repliche di un \textit{bootstrap circolare a blocchi} di sei mesi, mantenendo abbinati High e Low. L'intervallo al 95\% è ottenuto dai quantili bootstrap; il p-value bilaterale è una stima approssimata tramite distribuzione ricentrata sotto l'ipotesi nulla. Rispetto al vecchio resampling indipendente dei mesi, i blocchi conservano parte della dipendenza seriale, ma l'inferenza è ancora sensibile alla lunghezza dei blocchi e alle sei comparazioni effettuate.
+La differenza $\Delta IR$ viene stimata sugli stessi mesi per entrambi i gruppi. L'incertezza è valutata con 5.000 repliche di un \textit{bootstrap circolare a blocchi} di sei mesi, mantenendo abbinati High e Low. L'intervallo al 95\% è ottenuto dai quantili bootstrap; il p-value bilaterale è una stima approssimata tramite distribuzione ricentrata sotto l'ipotesi nulla. Il campionamento a blocchi conserva parte della dipendenza seriale, ma l'inferenza rimane sensibile alla lunghezza dei blocchi e alle sei comparazioni effettuate.
 
 \section{Risultati}
 
@@ -144,7 +141,7 @@ La differenza $\Delta IR$ viene stimata sugli stessi mesi per entrambi i gruppi.
 
 \begin{table}[H]
 \centering
-\caption{Valutazione corretta: Random Forest e previsione di riferimento sul test temporale, con purging}
+\caption{Random Forest e previsione di riferimento sul campione di test}
 \label{tab:rf}
 \small
 \setlength{\tabcolsep}{5pt}
@@ -162,9 +159,9 @@ La differenza $\Delta IR$ viene stimata sugli stessi mesi per entrambi i gruppi.
 \end{tabular}
 \end{table}
 
-La Tabella~\ref{tab:rf} riporta le metriche ricalcolate sui dati originali mediante lo split corretto. In cinque delle sei combinazioni periodo--area l'$R^2$ del Random Forest è negativo e la MAE è peggiore di quella del riferimento. L'unica eccezione è USA 2017--2020, con $R^2=0{,}396$ e MAE $0{,}195$, contro $0{,}272$ del riferimento. Questo risultato favorevole riguarda tuttavia un solo blocco e un test di otto mesi, con target futuri parzialmente sovrapposti; non dimostra una capacità predittiva stabile e trasferibile nel tempo.
+La Tabella~\ref{tab:rf} riporta le metriche di valutazione fuori campione. In cinque delle sei combinazioni periodo--area l'$R^2$ del Random Forest è negativo e la MAE è peggiore di quella del riferimento. L'unica eccezione è USA 2017--2020, con $R^2=0{,}396$ e MAE $0{,}195$, contro $0{,}272$ del riferimento. Questo risultato favorevole riguarda tuttavia un solo blocco e un test di otto mesi, con target futuri parzialmente sovrapposti; non dimostra una capacità predittiva stabile e trasferibile nel tempo.
 
-Dopo il purging rimangono 16 mesi distinti di training per ciascuna combinazione e 7--8 mesi distinti di test, corrispondenti a 96 osservazioni di training e 42--48 osservazioni di test. Le sei stime qui presentate \emph{sostituiscono}, per la nuova metodologia, i sei $R^2$ tutti negativi del report storico. Tali risultati originali restano documentati separatamente, ma non sono direttamente confrontabili perché ottenuti con una suddivisione differente dei dati.
+Dopo il purging rimangono 16 mesi distinti di training per ciascuna combinazione e 7--8 mesi distinti di test, corrispondenti a 96 osservazioni di training e 42--48 osservazioni di test. 
 
 \subsection{Confronto dei gruppi High e Low}
 
@@ -185,7 +182,7 @@ Dopo il purging rimangono 16 mesi distinti di training per ciascuna combinazione
 \end{tabular}
 \end{table}
 
-I valori puntuali sono coerenti con il report storico: nel periodo 2017--2020 si osserva un differenziale favorevole al gruppo High soprattutto in Europa, mentre nel 2021--2024 i gruppi Low presentano valori maggiori in entrambe le aree. Il risultato descrive differenze tra portafogli selezionati anche per settore di attività: non è un effetto ESG isolato. In particolare, un rialzo delle commodity può favorire i titoli oil \& gas senza che ciò dipenda dal loro punteggio ESG.
+Nel periodo 2017--2020 si osserva un differenziale favorevole al gruppo High soprattutto in Europa, mentre nel 2021--2024 i gruppi Low presentano valori maggiori in entrambe le aree. Il risultato descrive differenze tra portafogli selezionati anche per settore di attività e non isola l'effetto dei punteggi ESG. In particolare, un rialzo delle commodity può favorire i titoli oil \& gas senza che ciò dipenda dal loro punteggio ESG.
 
 \begin{table}[H]
 \centering
@@ -207,7 +204,7 @@ I valori puntuali sono coerenti con il report storico: nel periodo 2017--2020 si
 \end{tabular}
 \end{table}
 
-Il differenziale Europa 2017--2020 mostra un intervallo che non comprende lo zero e un p-value bootstrap approssimato di $0{,}033$. Tale risultato è \emph{esplorativo}: dipende dalla scelta dei blocchi, riguarda un piccolo numero di titoli e uno specifico periodo, e non tiene conto della molteplicità dei sei confronti. Non costituisce quindi un'evidenza robusta di un vantaggio generale dei portafogli High ESG. La procedura del vecchio report produceva per lo stesso blocco un p-value $0{,}530$ non coerente con l'intervallo riportato; il calcolo originale è conservato solo come documento storico.
+Il differenziale Europa 2017--2020 mostra un intervallo che non comprende lo zero e un p-value bootstrap approssimato di $0{,}033$. Tale risultato è \emph{esplorativo}: dipende dalla scelta dei blocchi, riguarda un piccolo numero di titoli e uno specifico periodo, e non tiene conto della molteplicità dei sei confronti. Non costituisce quindi un'evidenza robusta di un vantaggio generale dei portafogli High ESG. 
 
 \section{Limiti dell'analisi}
 
@@ -217,14 +214,10 @@ Non sono stati inclusi nel modello fattori di controllo macroeconomici o di risc
 
 \section{Conclusioni}
 
-Nel complesso, la nuova valutazione temporale riduce l'evidenza a favore dell'impiego dei punteggi ESG come predittori autonomi dei rendimenti relativi a un anno. Cinque su sei modelli Random Forest non raggiungono neppure la previsione costante del training nel test; soltanto nel blocco USA 2017--2020 il modello ottiene risultati positivi rispetto al riferimento. Questo episodio richiede ulteriori prove fuori campione e su altri periodi, non una generalizzazione.
+Nel complesso, i punteggi ESG non mostrano una capacità predittiva affidabile sui rendimenti relativi a un anno: cinque modelli Random Forest su sei hanno un $R^2$ negativo e una MAE peggiore della previsione costante. Il risultato USA 2017--2020 è l'unica eccezione, ma deriva da un test di appena otto mesi.
 
-L'analisi dei portafogli evidenzia che i differenziali di rendimento relativo aggiustato per la variabilità cambiano tra periodi e aree. L'associazione favorevole agli High nel 2017--2020 in Europa resta un'osservazione interessante, ma non identifica un premio ESG separato dall'appartenenza al comparto utility. Le dinamiche del petrolio e del gas nel 2021--2022, così come i regimi di interesse e regolazione, rappresentano spiegazioni economiche plausibili, non dimostrazioni causali.
+I differenziali di information ratio cambiano tra periodi e aree. Il vantaggio osservato per il gruppo High in Europa nel 2017--2020 non identifica un premio ESG indipendente dal comparto utility. Le dinamiche delle commodity nel 2021--2022 e i diversi regimi di interesse sono spiegazioni economiche plausibili di parte dei risultati.
 
-Lo studio suggerisce quindi prudenza nell'uso dei soli score ESG come segnale di investimento: un'estensione futura richiederebbe serie più lunghe, dati sui dividendi, benchmark e timestamp verificati, controllo delle esposizioni settoriali, periodi di validazione indipendenti e verifiche di sensibilità sulla procedura bootstrap. Il codice, i controlli dei file originali e le tabelle ricomputate sono disponibili nel repository riproducibile del progetto.
-
-\section*{Provenienza e riproducibilità}
-
-L'elaborazione aggiornata è stata eseguita sui tre file storici autentici recuperati dal repository pubblico dell'autore e verificati tramite dimensione e hash Git. Le metriche qui riportate corrispondono all'esecuzione Python su GitHub Actions del 4 novembre 2026 (run \texttt{41822713577}); i quattro file CSV degli output sono disponibili come \textit{artifact} dell'esecuzione. Il report originale del settembre 2025 è conservato separatamente. Questa revisione del metodo non sostituisce né altera retroattivamente i risultati originali.
+Per valutazioni più robuste servirebbero serie più lunghe, prezzi comprensivi dei dividendi, benchmark e date di disponibilità dei rating verificati, oltre a controlli per il rischio settoriale e analisi di sensibilità sul bootstrap.
 
 \end{document}

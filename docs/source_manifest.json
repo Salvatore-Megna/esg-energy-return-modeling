@@ -1,87 +1,18 @@
 {
-  "repository": "Salvatore-Megna/Salvatore-Megna.github.io",
-  "branch": "main",
-  "accesso": "GitHub connector: tree/contents + ispezione del codice notebook e CSV; hash Git blob",
-  "file": [
-    {
-      "nome": "SALVATORE MEGNA DATI PANEL.xlsx",
-      "percorso_repo": "projects/esg-performance/assets/SALVATORE MEGNA DATI PANEL.xlsx",
-      "github_blob_sha1": "78c6357d377d6124d3e64c64777d9a266c4e1a45",
-      "dimensione_bytes": 104928,
-      "stato": "ORIGINALE_VERIFICATO_SU_GITHUB__NON_INCLUSO_COME_BYTE_NELLA_ZIP",
-      "note": "dataset originale ESG; struttura interna non ispezionata",
-      "url_raw": "https://raw.githubusercontent.com/Salvatore-Megna/Salvatore-Megna.github.io/main/projects/esg-performance/assets/SALVATORE%20MEGNA%20DATI%20PANEL.xlsx",
-      "url_repo": "https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/blob/main/projects/esg-performance/assets/SALVATORE%20MEGNA%20DATI%20PANEL.xlsx"
+  "source_repository": "Salvatore-Megna/Salvatore-Megna.github.io",
+  "source_directory": "projects/esg-performance/assets",
+  "files": {
+    "SALVATORE MEGNA DATI PANEL.xlsx": {
+      "bytes": 104928,
+      "git_blob_sha1": "78c6357d377d6124d3e64c64777d9a266c4e1a45"
     },
-    {
-      "nome": "prezzi_mensili_aggiornato.csv",
-      "percorso_repo": "projects/esg-performance/assets/prezzi_mensili_aggiornato.csv",
-      "github_blob_sha1": "7d812d37898c914ec5712506021d472e20af590a",
-      "dimensione_bytes": 91219,
-      "stato": "ORIGINALE_VERIFICATO_SU_GITHUB__NON_INCLUSO_COME_BYTE_NELLA_ZIP",
-      "note": "prezzi storici, colonne date/ticker/price",
-      "url_raw": "https://raw.githubusercontent.com/Salvatore-Megna/Salvatore-Megna.github.io/main/projects/esg-performance/assets/prezzi_mensili_aggiornato.csv",
-      "url_repo": "https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/blob/main/projects/esg-performance/assets/prezzi_mensili_aggiornato.csv"
+    "prezzi_mensili_aggiornato.csv": {
+      "bytes": 91219,
+      "git_blob_sha1": "7d812d37898c914ec5712506021d472e20af590a"
     },
-    {
-      "nome": "benchmarks_monthly_returns.csv",
-      "percorso_repo": "projects/esg-performance/assets/benchmarks_monthly_returns.csv",
-      "github_blob_sha1": "14e03de0fd48a9782eec829ef643f53ec0f5b6e9",
-      "dimensione_bytes": 7700,
-      "stato": "ORIGINALE_VERIFICATO_SU_GITHUB__NON_INCLUSO_COME_BYTE_NELLA_ZIP",
-      "note": "benchmark mensili, colonne date/bm_USA/bm_EU",
-      "url_raw": "https://raw.githubusercontent.com/Salvatore-Megna/Salvatore-Megna.github.io/main/projects/esg-performance/assets/benchmarks_monthly_returns.csv",
-      "url_repo": "https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/blob/main/projects/esg-performance/assets/benchmarks_monthly_returns.csv"
-    },
-    {
-      "nome": "Sustainable Finance & ESG Investing_script.ipynb",
-      "percorso_repo": "projects/esg-performance/assets/Sustainable Finance & ESG Investing_script.ipynb",
-      "github_blob_sha1": "eaae81e85b53152d760427724360155c84e3236d",
-      "dimensione_bytes": 26030,
-      "stato": "ORIGINALE_VERIFICATO_SU_GITHUB__NON_INCLUSO_COME_BYTE_NELLA_ZIP",
-      "note": "notebook storico con codice e output di esecuzione",
-      "url_raw": "https://raw.githubusercontent.com/Salvatore-Megna/Salvatore-Megna.github.io/main/projects/esg-performance/assets/Sustainable%20Finance%20%26%20ESG%20Investing_script.ipynb",
-      "url_repo": "https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/blob/main/projects/esg-performance/assets/Sustainable%20Finance%20%26%20ESG%20Investing_script.ipynb"
-    },
-    {
-      "nome": "Sustainable Finance & ESG Investing_script.html",
-      "percorso_repo": "projects/esg-performance/assets/Sustainable Finance & ESG Investing_script.html",
-      "github_blob_sha1": "6600710735ab4564fedda7a6a0fe7a208819f9e3",
-      "dimensione_bytes": 349810,
-      "stato": "ORIGINALE_VERIFICATO_SU_GITHUB__NON_INCLUSO_COME_BYTE_NELLA_ZIP",
-      "note": "esportazione HTML dello script",
-      "url_raw": "https://raw.githubusercontent.com/Salvatore-Megna/Salvatore-Megna.github.io/main/projects/esg-performance/assets/Sustainable%20Finance%20%26%20ESG%20Investing_script.html",
-      "url_repo": "https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/blob/main/projects/esg-performance/assets/Sustainable%20Finance%20%26%20ESG%20Investing_script.html"
-    },
-    {
-      "nome": "Sustainable Finance & ESG Investing_Report.pdf",
-      "percorso_repo": "projects/esg-performance/assets/Sustainable Finance & ESG Investing_Report.pdf",
-      "github_blob_sha1": "d73dcaff19c1e203dfff6a62dd244e6adc4dc25d",
-      "dimensione_bytes": 230412,
-      "stato": "ORIGINALE_VERIFICATO_SU_GITHUB__NON_INCLUSO_COME_BYTE_NELLA_ZIP",
-      "note": "report storico PDF; contenuto non verificato pagina per pagina",
-      "url_raw": "https://raw.githubusercontent.com/Salvatore-Megna/Salvatore-Megna.github.io/main/projects/esg-performance/assets/Sustainable%20Finance%20%26%20ESG%20Investing_Report.pdf",
-      "url_repo": "https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/blob/main/projects/esg-performance/assets/Sustainable%20Finance%20%26%20ESG%20Investing_Report.pdf"
-    },
-    {
-      "nome": "Sustainable Finance & ESG Investing_ppt.pdf",
-      "percorso_repo": "projects/esg-performance/assets/Sustainable Finance & ESG Investing_ppt.pdf",
-      "github_blob_sha1": "e680d05b641b2dfff0d77fcb3c69c0f6ea2bd00f",
-      "dimensione_bytes": 24478061,
-      "stato": "ORIGINALE_VERIFICATO_SU_GITHUB__NON_INCLUSO_COME_BYTE_NELLA_ZIP",
-      "note": "slide storiche PDF; contenuto non verificato pagina per pagina",
-      "url_raw": "https://raw.githubusercontent.com/Salvatore-Megna/Salvatore-Megna.github.io/main/projects/esg-performance/assets/Sustainable%20Finance%20%26%20ESG%20Investing_ppt.pdf",
-      "url_repo": "https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/blob/main/projects/esg-performance/assets/Sustainable%20Finance%20%26%20ESG%20Investing_ppt.pdf"
-    },
-    {
-      "nome": "index.html",
-      "percorso_repo": "projects/esg-performance/index.html",
-      "github_blob_sha1": "62b87b09f07da5da47e257605848b23caac063c1",
-      "dimensione_bytes": 2092,
-      "stato": "ORIGINALE_VERIFICATO_SU_GITHUB__NON_INCLUSO_COME_BYTE_NELLA_ZIP",
-      "note": "pagina web storica del progetto",
-      "url_raw": "https://raw.githubusercontent.com/Salvatore-Megna/Salvatore-Megna.github.io/main/projects/esg-performance/index.html",
-      "url_repo": "https://github.com/Salvatore-Megna/Salvatore-Megna.github.io/blob/main/projects/esg-performance/index.html"
+    "benchmarks_monthly_returns.csv": {
+      "bytes": 7700,
+      "git_blob_sha1": "14e03de0fd48a9782eec829ef643f53ec0f5b6e9"
     }
-  ]
+  }
 }

@@ -1,6 +1,6 @@
-# Authenticated empirical results — 4 November 2026
+# Results by period and region
 
-**Source and execution:** 12 historical energy equities, 2013–2024. The three source files were downloaded and verified against the historical Git blob hashes. [GitHub Actions run 41822713577](https://github.com/Salvatore-Megna/esg-energy-return-modeling/actions/runs/41822713577) passed both jobs. Four original CSV results from the run are available in [artifact 13318280263](https://github.com/Salvatore-Megna/esg-energy-return-modeling/actions/runs/41822713577/artifacts/13318280263). Values below are rounded from the actual CI log, **not inferred from historical output or synthetic tests**.
+The tables contain results from the analysis run on the three study files, using the temporal holdout and paired bootstrap described in [methodology notes](methodology.md). Values are rounded to four decimal places.
 
 ## Forward 12-month Random Forest — corrected purged temporal holdout
 
@@ -34,6 +34,6 @@ The original “relative Sharpe” is an **annualized information ratio**, defin
 
 ## Differences from the 2025 original
 
-The historical notebook reported six negative R² values under its ticker-row 80/20 split. In the corrected analysis the temporal unit is month, a 12-month purge is applied and labels cannot cross the three period boundaries, so those six values are **not directly comparable** with this table. The historical bootstrap p-values were not computed from a centered null distribution; in particular, the reported European 2017–2020 p-value of 0.530 conflicted with the historical percentile interval excluding zero. The new numbers use a different, explicitly documented block-bootstrap procedure.
+These estimates use a different temporal validation and bootstrap procedure from the 2025 notebook; the two sets of model metrics are not directly comparable. See [methodology notes](methodology.md).
 
-**Remaining scientific checks before publication:** trace benchmark series to the actual underlying ETFs; verify adjustment of stock prices for distributions, availability timestamps of ESG ratings, and redistribution rights; test sensitivity to 3/6/12-month block lengths and to alternative benchmark/portfolio specifications.
+**Further checks:** trace benchmark series to the actual underlying ETFs; verify adjustment of stock prices for distributions, availability timestamps of ESG ratings, and redistribution rights; test sensitivity to 3/6/12-month block lengths and to alternative benchmark/portfolio specifications.

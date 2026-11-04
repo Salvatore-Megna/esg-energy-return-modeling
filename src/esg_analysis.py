@@ -1,9 +1,4 @@
-"""ESG Energy (2013–2024): audited reimplementation of the historic two-layer study.
-
-This module makes NO claim that the historical Random Forest scores survive a purged
-12-month-ahead evaluation. Original notebook and data are linked in README.
-All numeric outputs in outputs/ require authentic inputs, not synthetic records.
-"""
+"""Monthly ESG scores, relative energy-stock returns and model evaluation."""
 
 from __future__ import annotations
 
@@ -40,7 +35,7 @@ def month_num(values: pd.Series) -> pd.Series:
 
 
 def read_prices(path: Path) -> pd.DataFrame:
-    # Original: price, not independently verified as dividend-adjusted total return.
+    # Input prices have not been independently verified as dividend-adjusted.
     p = pd.read_csv(path)
     required = {"date", "ticker", "price"}
     if not required.issubset(p):
@@ -50,7 +45,7 @@ def read_prices(path: Path) -> pd.DataFrame:
     p["price"] = pd.to_numeric(p["price"], errors="raise")
     if not np.isfinite(p["price"]).all() or (p["price"] <= 0).any():
         raise ValueError("Prices must be positive and finite")
-    # Keep last record in ORIGINAL file order within a ticker-month.
+    # Retain the last available record for each ticker and calendar month.
     p = p.drop_duplicates(["ticker", "date"], keep="last")
     p = p.sort_values(["ticker", "date"]).reset_index(drop=True)
     p["previous_date"] = p.groupby("ticker")["date"].shift(1)
