@@ -1,0 +1,12 @@
+data/raw/
+outputs/
+__pycache__/
+.pytest_cache/
+.venv/
+.ipynb_checkpoints/
+.DS_Store
+*.pyc
+*.aux
+*.log
+*.out
+*.synctex.gz
