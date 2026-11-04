@@ -18,11 +18,13 @@ Il notebook successivo della chat, che usa altri titoli e un benchmark costruito
 8. **Bootstrap:** mesi High e Low sempre campionati con gli **stessi indici**; blocchi circolari contigui di 6 mesi per attenuare l'ipotesi di indipendenza mensile. Gli intervalli sono percentili bootstrap; il p-value esplorativo utilizza la distribuzione **centrata** `delta_boot - delta_osservato`, confrontando i valori assoluti con `|delta_osservato|`, con correzione add-one. Il p-value storico (distribuzione non centrata) non è valido per il test H0: delta=0. L'approssimazione centrata non sostituisce un test formale affidabile in campioni molto piccoli; fare analisi di sensibilità per blocchi 3/6/12 mesi.
 9. **Composizione dei portafogli:** per le serie High/Low sono usati soltanto mesi con le tre società di ciascun gruppo presenti; questo rende stabile il peso 1/3 per titolo e non introduce variazioni arbitrarie di composizione.
 
-## Controlli superati ora e controlli aperti
+## Controlli superati e controlli aperti
 
-- **Superati localmente:** sette test logici e di integrazione su dati sintetici di sola verifica; verifica dei 12 mesi consecutivi e dei confini dei periodi; eliminazione dell'overlap train/test; riproduzione della somma aritmetica target; campionamento in blocchi abbinato; differenza nulla per portafogli identici; esecuzione sintetica completa dei sei modelli e sei confronti Sharpe; implementazione SHA Git corretta.
-- **Non ancora eseguiti:** download dei tre file autentici dal sito GitHub, audit della struttura interna di `SALVATORE MEGNA DATI PANEL.xlsx`, esecuzione end-to-end su 2013–2024, risultati numerici corretti di R², MAE, importanze, Sharpe e IC/p-value, confronto/sensibilità dei bootstrap e controllo indipendente di XLE/EXH1.DE.
-- **Report storico:** il LaTeX `report/main_historical.tex` e il PDF `report/report_historical_retypeset.pdf` preservano i risultati 2025 e la veste tipografica IVPS. **Non sono stati aggiornati con numeri del modello corretto**, perché quei numeri non sono stati calcolati su dati reali. La tabella originaria EU 2017–2020 riporta IC95% [0,371; 3,223] e p=0,530: è un'incoerenza metodologica nota, non un dato validato.
+- **Test locali superati:** sette test logici e di integrazione con dati sintetici confinati nei test: validazione dei 12 mesi consecutivi, purging, target a somma aritmetica, bootstrap a blocchi abbinati e integrazione del flusso completo.
+- **Esecuzione autentica superata su GitHub Actions:** run [41822713577](https://github.com/Salvatore-Megna/esg-energy-return-modeling/actions/runs/41822713577), con i due job `unit-tests` e `data-reproducibility` riusciti. I tre file originali sono stati scaricati dal sito storico e validati per dimensione e Git blob SHA-1. Sono state calcolate sei valutazioni temporali e sei differenze di information ratio; i quattro file CSV sono nell'artifact dell'esecuzione.
+- **Risultati confermati nel log:** cinque $R^2$ negativi su sei; unica eccezione USA 2017--2020 $R^2 = 0,3955$ (baseline $-0,1689$). Il confronto EU 2017--2020 produce $\Delta IR = 1,6762$, IC bootstrap $[0,1955;3,2472]$ e $p\approx0,0326$ non corretto per confronti multipli. Dettagli in [`EMPIRICAL_RESULTS.md`](EMPIRICAL_RESULTS.md).
+- **Aperti:** revisione indipendente dei benchmark e del trattamento dei dividendi, timestamp effettivi degli score ESG, diritti di redistribuzione, analisi di sensibilità a blocchi 3/6/12 mesi, correzione per confronti multipli e revisione scientifica/editoriale conclusiva.
+- **Documenti:** `report/main_historical.tex` conserva soltanto il testo e i risultati del 2025. `report/main.tex` e `report/report.pdf` rappresentano invece l'analisi metodologicamente rivista e i risultati verificati nel run citato; non sostituiscono retroattivamente il lavoro originale.
 
 ## Limiti fondamentali da dichiarare nel report finale
 
@@ -35,4 +37,4 @@ Il notebook successivo della chat, che usa altri titoli e un benchmark costruito
 
 ## Principio di rendicontazione
 
-Non inventare risultati. Le prestazioni del notebook 2025 sono **storiche**. Le prestazioni della nuova pipeline potranno essere pubblicate soltanto dopo l'esecuzione verificabile sugli originali, preferibilmente in un nuovo repository inizialmente privato con GitHub Actions verde. Non cancellare il sito esistente e non cambiare nessuna repository da privata a pubblica senza consenso.
+Non inventare risultati. Le prestazioni del notebook 2025 sono **storiche**. Le prestazioni della nuova pipeline sono state calcolate e verificate tramite GitHub Actions; il repository resta privato in attesa dell'audit finale e dei controlli sui diritti di terze parti. Non cancellare il sito esistente e non cambiare nessuna repository da privata a pubblica senza consenso.
