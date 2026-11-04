@@ -4,7 +4,7 @@ An analysis of 12 energy companies in the US and Europe between 2013 and 2024. I
 
 The project uses Random Forest regression for the forecasting exercise and an annualized information ratio for the portfolio comparison.
 
-[Read the report (PDF)](report/report.pdf) · [Detailed results](docs/results.md)
+[Original 2025 report — LaTeX edition](report/report.pdf) · [Results of the revised analysis](docs/results.md)
 
 ## Data and sample
 
@@ -17,7 +17,9 @@ The input files cover monthly prices, sector-benchmark returns and E, S, G and o
 
 The two groups are defined by business activity, not by an estimated cutoff in ESG scores. This matters when interpreting differences between them. [Data sources and file details](data/README.md).
 
-## Results
+## Results of the revised analysis
+
+The PDF report preserves the methodology, formula, tables and conclusions of the original 2025 study. The results below instead refer to the later Python evaluation with calendar-month holdouts; the two sets of estimates should not be mixed.
 
 - Random Forest test R² is **negative in five of the six** period–region combinations. The only positive result is for the US in 2017–2020 (**R² = 0.396**); that test covers just eight distinct months, so the finding needs further validation.
 - In Europe in 2017–2020, the difference between the two portfolios' annualized information ratios is **1.676** (95% block-bootstrap interval **0.196 to 3.247**). The result is exploratory: the groups differ by industry, and the six comparisons have not been corrected for multiple testing.
@@ -57,7 +59,7 @@ The analysis and tests also run in [GitHub Actions](https://github.com/Salvatore
 |---|---|
 | `src/esg_analysis.py` | Data preparation, models and portfolio analysis |
 | `scripts/fetch_originals.py` | Source-file retrieval and checks |
-| `report/` | LaTeX report and compiled PDF |
+| `report/` | Original 2025 report, typeset in LaTeX without changing its content |
 | `docs/results.md` | Full results by period and region |
 | `docs/methodology.md` | Method choices and limitations |
 | `tests/` | Unit and integration tests |

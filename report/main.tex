@@ -20,7 +20,7 @@
 
 \captionsetup[table]{position=top}
 \captionsetup[figure]{position=bottom}
-\emergencystretch=2em % Evita un solo sforamento nella lista, senza cambiare lo stile.
+\emergencystretch=2em
 
 \title{
     \textbf{
@@ -29,7 +29,7 @@
     }
 }
 \author{Salvatore Megna}
-\date{Novembre 2026}
+\date{Settembre 2025}
 
 \begin{document}
 
@@ -39,7 +39,7 @@
 
 Questo report si occupa di valutare se e come i punteggi ESG (Environmental, Social, Governance) si riflettano sulle performance borsistiche delle principali aziende energetiche in USA ed Europa. L'analisi ha due obiettivi complementari: verificare se i livelli ESG aiutano ad anticipare la performance relativa dei titoli su un orizzonte di 12 mesi, e confrontare, \textit{ex post}, il profilo rischio--rendimento dei portafogli con profilo ESG elevato rispetto a quelli con profilo più basso. Per evitare di confondere l'effetto ESG con l'andamento del comparto energia, i rendimenti sono misurati in forma relativa rispetto a benchmark settoriali coerenti con ciascuna area di mercato.
 
-Per dare significato economico ai risultati, il periodo viene segmentato in tre fasi politico-regolatorie: 2013--2016 (pre-Trump), 2017--2020 (Trump), 2021--2024 (Biden); inoltre distinguiamo sistematicamente USA da Europa, così da cogliere eventuali differenze geografiche e temporali nell'associazione tra sostenibilità e rendimento.
+Per dare significato economico ai risultati, il periodo viene segmentato in tre fasi politico-regolatorie: 2013--2016 (pre-Trump), 2017--2020 (Trump), 2021--2024 (Biden), inoltre distinguiamo sistematicamente USA da Europa, così da cogliere eventuali differenze geografiche e temporali nell'associazione tra sostenibilità e rendimento.
 
 \section{Motivazione economica}
 
@@ -91,133 +91,97 @@ Il campione di aziende analizzato è composto da 12 large cap dell'energia, sele
 Perché queste scelte:
 
 \begin{itemize}
-\item \textbf{Confrontabilità:} la presenza degli stessi due comparti nelle due aree permette il confronto descrittivo entro ciascun mercato; tuttavia la diversa esposizione a commodity e regolazione resta un potenziale fattore confondente.
+\item \textbf{Confrontabilità:} avere, in entrambe le aree, un blocco High e uno Low con modelli di business diversi (utility/transizione vs oil \& gas) permette di leggere i risultati come differenze relative dentro USA ed Europa, senza confonderli con il ciclo del settore.
 \item \textbf{Qualità dei dati:} tutte sono large cap incluse in indici principali (S\&P 500, FTSE 100, CAC 40, DAX, FTSE MIB, IBEX 35); la dimensione assicura liquidità e serie storiche complete.
 \item \textbf{Copertura informativa:} i punteggi ESG mensili sono disponibili presso Sustainalytics, mentre gli storici di prezzo provengono da Yahoo Finance. Questo consente di costruire un dataset mensile lungo il periodo 2013--2024.
-\item \textbf{Lettura economica pulita:} il confronto tra utility/transizione e oil \& gas consente di osservare profili finanziari diversi, ma non permette di identificare un effetto ESG separato dal modello di business.
+\item \textbf{Lettura economica pulita:} separare utility/transizione da oil \& gas aiuta a capire quando l'eventuale ``segnale ESG'' prevale e quando, invece, contano soprattutto prezzo delle commodity e ciclo macro.
 \end{itemize}
 
-In sintesi, il campione offre un confronto descrittivo tra sei titoli statunitensi e sei europei. Le etichette High e Low sono categorie prestabilite sulla base del comparto (utility/transizione contro oil \& gas), non il risultato di una classificazione statistica ottenuta dai punteggi ESG; pertanto non isolano un effetto causale della sostenibilità.
-
+In sintesi, il set di aziende massimizza omogeneità e copertura tra aree e gruppi, mantenendo al tempo stesso la possibilità di confronti chiari su dimensione, liquidità e disponibilità dei dati.
 
 \section{Metodologia}
 
-L'analisi integra prezzi mensili, rendimenti di due benchmark settoriali e punteggi ESG, per poi distinguere due livelli: la previsione a 12 mesi dei rendimenti relativi e il confronto \textit{ex post} dei profili rendimento--rischio dei gruppi High e Low. La valutazione predittiva utilizza una suddivisione temporale dei dati, mentre il confronto fra i portafogli è accompagnato da intervalli di confidenza ottenuti con bootstrap a blocchi.
+La nostra analisi procede in quattro passaggi coerenti. Prima costruiamo il dataset longitudinale mensile, integrando prezzi, benchmark settoriali e punteggi ESG. Poi trasformiamo i rendimenti in misure relative al benchmark dell'area. Terzo, testiamo se i livelli ESG anticipano la performance relativa dell'anno successivo. Infine, valutiamo \textit{ex post} il profilo rischio--rendimento dei gruppi (High vs Low) tramite Sharpe annualizzato e confronto statistico.
 
-\subsection{Dataset e rendimenti relativi}
+\subsection{Dataset}
 
-Le tre basi informative sono le serie mensili dei prezzi dei 12 titoli, i rendimenti dei benchmark delle aree USA ed Europa e i punteggi E, S, G e ESG complessivo. I file impiegati riportano benchmark riferiti a XLE per gli USA e a EXH1.DE per l'Europa, punteggi ESG attribuiti a Sustainalytics e prezzi di Yahoo Finance. La composizione delle serie benchmark e le condizioni di utilizzo dei dati ESG richiedono ulteriori verifiche.
+Utilizziamo tre fonti con dati a cadenza mensile: i prezzi dei 12 titoli selezionati (USA ed Europa), i rendimenti dei benchmark settoriali Energy USA (XLE) ed Europa (STOXX Europe 600 Oil \& Gas, codice EXH1.DE), e i punteggi ESG mensili di Sustainalytics per ciascun titolo. Le date sono armonizzate a fine mese.
 
-Le date sono armonizzate a fine mese; si escludono osservazioni duplicate o prive di rendimenti mensili consecutivi. Il rendimento relativo per titolo $i$ e mese $t$ è definito come
-\begin{equation}
-r^{\mathrm{rel}}_{i,t}=\frac{P_{i,t}}{P_{i,t-1}}-1-r^{\mathrm{settore}}_{a(i),t},
-\end{equation}
-dove $a(i)$ identifica l'area. I prezzi archiviati non sono stati verificati come rendimenti totali comprensivi di dividendi; la misura è quindi interpretata in base ai campi effettivamente disponibili. Sono mantenute tre finestre descrittive: 2013--2016, 2017--2020 e 2021--2024. Non si interpreta la periodizzazione come un esperimento politico né come identificazione causale.
+\subsection{Previsione a 12 mesi}
 
-\subsection{Random Forest e validazione temporale}
+Per ogni titolo costruiamo il rendimento relativo, sottraendo mese per mese, il rendimento del benchmark dell'area geografica di appartenenza. In questo modo isoliamo la componente ``specifica del titolo'' dalla performance del settore energia. L'obiettivo è verificare se i livelli ESG anticipano la performance relativa cumulata dell'anno successivo. Per ogni mese $t$ definiamo il target come la somma dei 12 rendimenti relativi futuri (da $t+1$ a $t+12$). Come variabili esplicative usiamo esclusivamente i punteggi ESG osservati al mese precedente (lag 1: E, S, G e totale). Stimiamo modelli Random Forest distinti per area geografica (USA, Europa) e per finestra temporale coerente con il contesto politico-regolatorio: 2013--2016 (pre-Trump), 2017--2020 (Trump), 2021--2024 (Biden). La validazione è out-of-sample con split temporale, il modello è stato addestrato sui mesi iniziali della finestra temporale analizzata e testato sui mesi finali, con un rapporto tra i mesi di addestramento e i mesi di test di 80/20. Le metriche riportate sono $R^2$ e MAE sul set di test.
 
-Per ogni titolo e data $t$ il target è la somma \emph{aritmetica} dei dodici rendimenti relativi dei mesi successivi:
-\begin{equation}
-y_{i,t}^{(12)}=\sum_{k=1}^{12}r^{\mathrm{rel}}_{i,t+k}.
-\end{equation}
-Questa somma non equivale a un rendimento composto. Le variabili esplicative sono i quattro punteggi ESG al mese precedente: $E_{t-1},S_{t-1},G_{t-1},ESG_{t-1}$. I target sono costruiti solo quando sono disponibili tutti i dodici mesi consecutivi e non oltrepassano i confini dei periodi definiti.
+\subsection{Profilo rischio--rendimento}
 
-Stimiamo sei Random Forest separati (tre periodi $\times$ due aree, 400 alberi). Il campione di test è scelto in base agli \emph{ultimi mesi distinti}, senza dividere titoli dello stesso mese tra train e test. Dalle osservazioni del training vengono inoltre escluse tutte quelle il cui intervallo futuro del target raggiunge il primo mese del test: è il \emph{purging} delle etichette sovrapposte. Il riferimento di confronto è una previsione costante pari alla media del target nel solo training. Per modello e riferimento si riportano $R^2$ e MAE sui medesimi dati di test.
+A valle della previsione, valutiamo il profilo rischio--rendimento dei gruppi. Per ogni combinazione periodo $\times$ area $\times$ classe ESG costruiamo una serie equal-weight dei rendimenti relativi mensili e calcoliamo l'Indice di Sharpe annualizzato (Formula 1). Confrontiamo poi High e Low tramite la differenza di Sharpe e ne stimiamo un intervallo di confidenza al 95\% con bootstrap sui mesi disponibili, riportando anche un p-value a due code. Questo approccio consente di capire se, e quando, i titoli con profilo ESG più elevato mostrano un profilo rischio--rendimento superiore rispetto ai Low, mantenendo costanti area geografica e periodo.
 
-La procedura evita il contatto temporale diretto tra etichette di training e inizio del test; non elimina però la sovrapposizione dei target \emph{all'interno} del test, né l'esposizione delle imprese agli stessi fattori economici. Pertanto il numero di righe osservate non rappresenta un corrispondente numero di mesi indipendenti e i risultati restano esplorativi. La \textit{permutation importance} calcolata sul test è una misura descrittiva della dipendenza del modello dalle variabili, non una misura di causalità.
+\[
+\mathrm{Sharpe}_{\mathrm{rel}} =
+\frac{\mathrm{E}[R_{\mathrm{titolo}} - R_{\mathrm{settore}}]}{\sigma(R_{\mathrm{titolo}} - R_{\mathrm{settore}})}\times\sqrt{12}
+\]
 
-\subsection{Profilo rischio--rendimento e bootstrap}
-
-Per ogni combinazione periodo $\times$ area $\times$ gruppo ESG costruiamo il rendimento relativo mensile \emph{equal-weight} dei tre titoli del gruppo. L'indicatore utilizzato storicamente come ``Sharpe relativo'' è più propriamente un \textit{information ratio}, perché confronta i rendimenti con un benchmark settoriale, non con un tasso privo di rischio:
-\begin{equation}
-IR_{a,g}=\frac{\overline{r}^{\,\mathrm{rel}}_{a,g}}{s(r^{\mathrm{rel}}_{a,g})}\sqrt{12},
-\qquad \Delta IR_a=IR_{a,\mathrm{High}}-IR_{a,\mathrm{Low}}.
-\end{equation}
-La differenza $\Delta IR$ viene stimata sugli stessi mesi per entrambi i gruppi. L'incertezza è valutata con 5.000 repliche di un \textit{bootstrap circolare a blocchi} di sei mesi, mantenendo abbinati High e Low. L'intervallo al 95\% è ottenuto dai quantili bootstrap; il p-value bilaterale è una stima approssimata tramite distribuzione ricentrata sotto l'ipotesi nulla. Il campionamento a blocchi conserva parte della dipendenza seriale, ma l'inferenza rimane sensibile alla lunghezza dei blocchi e alle sei comparazioni effettuate.
+\noindent\textit{Formula 1:} Indice di Sharpe annualizzato: rapporto tra rendimento in eccesso medio del titolo rispetto al settore e la deviazione standard dei rendimenti in eccesso, moltiplicato per $\sqrt{12}$ per annualizzare i dati mensili.
 
 \section{Risultati}
 
-\subsection{Previsione dei rendimenti relativi a dodici mesi}
-
 \begin{table}[H]
 \centering
-\caption{Random Forest e previsione di riferimento sul campione di test}
+\caption{Predittività a 12 mesi calcolata con Random Forest}
 \label{tab:rf}
 \small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{llrrrr}
+\begin{tabular}{lrrrr}
 \toprule
-\textbf{Periodo} & \textbf{Area} & \textbf{$R^2$ RF} & \textbf{$R^2$ rif.} & \textbf{MAE RF} & \textbf{MAE rif.} \\
+\textbf{Periodo} & \textbf{$R^2$ (EU)} & \textbf{$R^2$ (USA)} & \textbf{MAE (EU)} & \textbf{MAE (USA)} \\
 \midrule
-2013--2016 & EU  & $-2{,}696$ & $-1{,}736$ & $0{,}204$ & $0{,}173$ \\
-2013--2016 & USA & $-0{,}191$ & $-0{,}121$ & $0{,}119$ & $0{,}113$ \\
-2017--2020 & EU  & $-0{,}612$ & $-0{,}327$ & $0{,}371$ & $0{,}343$ \\
-2017--2020 & USA & $0{,}396$  & $-0{,}169$ & $0{,}195$ & $0{,}272$ \\
-2021--2024 & EU  & $-3{,}612$ & $-0{,}941$ & $0{,}259$ & $0{,}161$ \\
-2021--2024 & USA & $-3{,}262$ & $-0{,}846$ & $0{,}259$ & $0{,}183$ \\
+2013--2016 & $-1.399$ & $-0.475$ & $0.123$ & $0.132$ \\
+2017--2020 & $-1.813$ & $-0.395$ & $0.278$ & $0.309$ \\
+2021--2024 & $-1.071$ & $-1.387$ & $0.163$ & $0.201$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-La Tabella~\ref{tab:rf} riporta le metriche di valutazione fuori campione. In cinque delle sei combinazioni periodo--area l'$R^2$ del Random Forest è negativo e la MAE è peggiore di quella del riferimento. L'unica eccezione è USA 2017--2020, con $R^2=0{,}396$ e MAE $0{,}195$, contro $0{,}272$ del riferimento. Questo risultato favorevole riguarda tuttavia un solo blocco e un test di otto mesi, con target futuri parzialmente sovrapposti; non dimostra una capacità predittiva stabile e trasferibile nel tempo.
-
-Dopo il purging rimangono 16 mesi distinti di training per ciascuna combinazione e 7--8 mesi distinti di test, corrispondenti a 96 osservazioni di training e 42--48 osservazioni di test. 
-
-\subsection{Confronto dei gruppi High e Low}
+Come si vede dalla Tabella~\ref{tab:rf}, i modelli stimati sui punteggi ESG del mese precedente non riescono a prevedere la performance relativa cumulata a 12 mesi: gli $R^2$ out-of-sample risultano negativi in tutti i blocchi temporali e in entrambe le aree, mentre i MAE sono relativamente stabili tra USA ed Europa. Nel nostro campione i livelli ESG non forniscono un segnale predittivo affidabile sui rendimenti relativi a un anno.
 
 \begin{table}[H]
 \centering
-\caption{Information ratio annualizzato dei portafogli equal-weight rispetto al settore}
-\label{tab:ir}
+\caption{Sharpe relativo aggregato per gruppo (equal-weight, annualizzato)}
+\label{tab:sharpe}
 \small
-\setlength{\tabcolsep}{5pt}
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lrrrrrr}
 \toprule
-\textbf{Periodo} & \textbf{EU High} & \textbf{EU Low} & $\boldsymbol{\Delta}$\textbf{ EU} & \textbf{USA High} & \textbf{USA Low} & $\boldsymbol{\Delta}$\textbf{ USA} \\
+\textbf{Periodo} & \textbf{EU High} & \textbf{EU Low} & \shortstack{$\Delta$ EU\\(High--Low)} & \textbf{USA High} & \textbf{USA Low} & \shortstack{$\Delta$ USA\\(High--Low)} \\
 \midrule
-2013--2016 & $0{,}152$ & $0{,}112$ & $0{,}040$ & $0{,}431$ & $0{,}094$ & $0{,}337$ \\
-2017--2020 & $0{,}894$ & $-0{,}782$ & $1{,}676$ & $0{,}668$ & $0{,}042$ & $0{,}626$ \\
-2021--2024 & $-0{,}224$ & $0{,}397$ & $-0{,}622$ & $-0{,}667$ & $0{,}098$ & $-0{,}765$ \\
+2013--2016 & $0.152$ & $0.112$ & $0.04$ & $0.431$ & $0.094$ & $0.337$ \\
+2017--2020 & $0.894$ & $-0.782$ & $1.676$ & $0.668$ & $0.042$ & $0.626$ \\
+2021--2024 & $-0.224$ & $0.397$ & $-0.622$ & $-0.667$ & $0.098$ & $-0.765$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Nel periodo 2017--2020 si osserva un differenziale favorevole al gruppo High soprattutto in Europa, mentre nel 2021--2024 i gruppi Low presentano valori maggiori in entrambe le aree. Il risultato descrive differenze tra portafogli selezionati anche per settore di attività e non isola l'effetto dei punteggi ESG. In particolare, un rialzo delle commodity può favorire i titoli oil \& gas senza che ciò dipenda dal loro punteggio ESG.
+La Tabella~\ref{tab:sharpe} riassume l'indice di Sharpe annualizzato dei portafogli equal-weight per gruppo (High vs Low ESG) per periodo e area. Nel blocco pre-Trump il vantaggio degli High è limitato e non uniforme. Nel blocco 2017--2020 emerge un profilo rischio--rendimento più favorevole agli High, soprattutto in Europa. Nel blocco 2021--2024 la gerarchia si inverte: i Low ESG ottengono Sharpe mediamente più alti in entrambe le aree.
 
 \begin{table}[H]
 \centering
-\caption{Differenza di information ratio High--Low: bootstrap a blocchi abbinati (5.000 repliche, 6 mesi)}
-\label{tab:boot}
+\caption{Robustezza statistica bootstrap del differenziale di Sharpe High--Low ESG}
+\label{tab:bootstrap}
 \footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{llrrr}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrr}
 \toprule
-\textbf{Periodo} & \textbf{Area} & $\boldsymbol{\Delta IR}$ & \textbf{IC 95\%} & \textbf{$p$ appross.} \\
+\textbf{Periodo} & $\boldsymbol{\Delta}$\textbf{ EU} & \textbf{IC95\% EU} & \textbf{p-value EU} & $\boldsymbol{\Delta}$\textbf{ USA} & \textbf{IC95\% USA} & \textbf{p-value USA} \\
 \midrule
-2013--2016 & EU  & $0{,}040$ & $[-0{,}594;\ 0{,}690]$ & $0{,}905$ \\
-2013--2016 & USA & $0{,}337$ & $[-0{,}307;\ 1{,}009]$ & $0{,}316$ \\
-2017--2020 & EU  & $1{,}676$ & $[0{,}196;\ 3{,}247]$  & $0{,}033$ \\
-2017--2020 & USA & $0{,}626$ & $[-0{,}329;\ 1{,}672]$ & $0{,}203$ \\
-2021--2024 & EU  & $-0{,}622$ & $[-1{,}860;\ 0{,}774]$ & $0{,}347$ \\
-2021--2024 & USA & $-0{,}765$ & $[-2{,}084;\ 0{,}704]$ & $0{,}280$ \\
+2013--2016 & $0.04$ & $[-0.918;\,0.989]$ & $0.93$ & $0.337$ & $[-0.612;\,1.387]$ & $0.588$ \\
+2017--2020 & $1.676$ & $[0.371;\,3.223]$ & $0.53$ & $0.626$ & $[-0.807;\,2.447]$ & $0.576$ \\
+2021--2024 & $-0.622$ & $[-2.101;\,0.848]$ & $0.556$ & $-0.765$ & $[-2.039;\,0.729]$ & $0.513$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Il differenziale Europa 2017--2020 mostra un intervallo che non comprende lo zero e un p-value bootstrap approssimato di $0{,}033$. Tale risultato è \emph{esplorativo}: dipende dalla scelta dei blocchi, riguarda un piccolo numero di titoli e uno specifico periodo, e non tiene conto della molteplicità dei sei confronti. Non costituisce quindi un'evidenza robusta di un vantaggio generale dei portafogli High ESG. 
+La Tabella~\ref{tab:bootstrap} riporta i differenziali di Sharpe High--Low con intervalli di confidenza al 95\% e p-value da bootstrap. Il segnale pro-High nel 2017--2020 è il più coerente (soprattutto in Europa). Negli altri periodi, gli intervalli di confidenza comprendono lo zero: ciò implica che, data l'incertezza statistica, il differenziale di Sharpe potrebbe essere positivo, negativo o nullo; in termini formali, non possiamo escludere che $\Delta\mathrm{Sharpe}=0$ (p-value $>0{,}05$), quindi l'evidenza di un vantaggio stabile è debole.
 
-\section{Limiti dell'analisi}
+\section*{Conclusioni}
 
-La robustezza inferenziale è limitata dal campione ristretto (12 titoli, tre per portafoglio), dalla forte dipendenza temporale dei target futuri a 12 mesi, dalla breve durata del test per ciascun modello e dalla correlazione tra società nello stesso settore e periodo. I gruppi High e Low coincidono sostanzialmente con utility/transizione e oil \& gas: qualsiasi differenza può riflettere fattori economici, esposizione alle materie prime e regime dei tassi, non necessariamente ESG.
-
-Non sono stati inclusi nel modello fattori di controllo macroeconomici o di rischio tradizionale. I punteggi ESG dei diversi provider potrebbero avere definizioni e tempi di pubblicazione differenti; la disponibilità mensile nel file non verifica automaticamente che i singoli valori fossero conosciuti da un investitore alla data utilizzata. L'identità esatta dei benchmark e il trattamento dei dividendi nelle serie di prezzo richiedono controlli aggiuntivi. Gli intervalli bootstrap e i p-value non sono corretti per confronti multipli; una verifica di sensibilità con diverse ampiezze di blocco sarebbe necessaria prima di trarre conclusioni forti.
-
-\section{Conclusioni}
-
-Nel complesso, i punteggi ESG non mostrano una capacità predittiva affidabile sui rendimenti relativi a un anno: cinque modelli Random Forest su sei hanno un $R^2$ negativo e una MAE peggiore della previsione costante. Il risultato USA 2017--2020 è l'unica eccezione, ma deriva da un test di appena otto mesi.
-
-I differenziali di information ratio cambiano tra periodi e aree. Il vantaggio osservato per il gruppo High in Europa nel 2017--2020 non identifica un premio ESG indipendente dal comparto utility. Le dinamiche delle commodity nel 2021--2022 e i diversi regimi di interesse sono spiegazioni economiche plausibili di parte dei risultati.
-
-Per valutazioni più robuste servirebbero serie più lunghe, prezzi comprensivi dei dividendi, benchmark e date di disponibilità dei rating verificati, oltre a controlli per il rischio settoriale e analisi di sensibilità sul bootstrap.
+Nel complesso, i pattern osservati non vanno interpretati come un ``effetto presidente'', ma come il riflesso del ciclo macro-settoriale. Nel 2021--2022, per esempio, l'impennata di petrolio e gas ha sostenuto in modo eccezionale i titoli oil \& gas (prevalentemente Low ESG), mentre i rialzi dei tassi e le strozzature nelle catene di fornitura hanno pesato su molte società della transizione. In fasi meno dominate dalle commodity, il vantaggio dei profili ESG più elevati può riemergere o attenuarsi. Da un punto di vista predittivo, i punteggi ESG non anticipano la performance relativa cumulata a 12 mesi; tuttavia, \textit{ex post}, risultano associati a profili rischio--rendimento che si muovono con il contesto, come mostrato dalle tabelle dei risultati. Questo suggerisce cautela nell'uso ``meccanico'' dell'ESG come segnale di timing e rafforza l'idea di integrarlo con variabili macro e di settore (prezzi delle commodity, tassi) e con i fattori di rischio tradizionali. Va inoltre considerato che il nostro campione è concentrato su 12 large cap e su specifiche scelte di benchmark e finestra temporale; un'estensione futura a un universo più ampio, a pesi value-weighted e a diverse specifiche ESG potrebbe chiarire ulteriormente quando e perché l'informazione ESG si traduce in una migliore performance aggiustata per il rischio.
 
 \end{document}
