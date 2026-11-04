@@ -1,0 +1,170 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{caption}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.7cm,right=2.7cm}
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
+\emergencystretch=2em
+\title{\textbf{ESG and Performance in the Energy Sector:\\US/EU Comparison, 2013--2024}}
+\author{Salvatore Megna}
+\date{September 2025}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This report examines whether and how Environmental, Social and Governance (ESG) scores are reflected in the stock-market performance of major energy companies in the United States and Europe. The analysis has two complementary aims: to test whether ESG levels help anticipate stocks' relative performance over a 12-month horizon and to compare, \textit{ex post}, the risk--return profile of portfolios with higher ESG scores against portfolios with lower scores. To avoid confusing ESG effects with energy-sector movements, returns are measured relative to sector benchmarks appropriate to each market area.
+
+To give the results economic meaning, the sample period is divided into three political and regulatory phases: 2013--2016 (pre-Trump), 2017--2020 (Trump) and 2021--2024 (Biden). We also systematically distinguish the United States from Europe in order to capture geographic and temporal differences in the association between sustainability and returns.
+
+\section{Economic Motivation}
+
+ESG indices bring together information on environmental, social and governance risks that often do not appear in traditional financial statements. Higher scores are expected to be associated with better management of regulatory and reputational risks, stronger decision-making processes, and closer alignment with demand related to the energy transition. These channels may reduce the likelihood of incidents, stabilize cash flows and lower the cost of capital over time.
+
+Three practical effects are relevant to the energy sector:
+
+\begin{enumerate}
+\item \textbf{Access to capital:} companies with high ESG profiles obtain more favorable debt and equity financing terms, including through instruments such as green bonds and sustainability-linked loans, whose pricing is tied to sustainability goals.
+\item \textbf{Demand from institutional investors:} many funds can buy only securities that satisfy ESG criteria. A higher score makes a stock eligible for more mandates, generates broader and more stable buying flows, increases liquidity and tends to reduce volatility.
+\item \textbf{Valuation premiums:} when perceived risk is lower, investors require a lower cost of capital. For given expected earnings, present value rises: the stock tends to trade at higher multiples and may show a better risk--return profile over time.
+\end{enumerate}
+
+These benefits are not automatic. Commodity cycles and interest rates matter considerably in the energy sector: during sharp oil-price increases or monetary tightening, traditional businesses (often with lower ESG scores) may outperform thanks to immediate cash flow and greater pricing power. ESG metrics also differ between providers and may introduce measurement noise. For this reason, our study measures returns relative to sector benchmarks and carefully distinguishes geographic regions and political-regulatory periods, to understand when ESG information translates into economic benefits and when macroeconomic and sector dynamics prevail.
+
+\section{Company Selection}
+
+\begin{table}[H]
+\centering
+\caption{Sample of companies (US/EU): ESG groups and Yahoo Finance tickers}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Group} & \textbf{Company} & \textbf{Ticker (Yahoo Finance)} \\
+\midrule
+USA -- High ESG & NextEra Energy & NEE \\
+USA -- High ESG & Xcel Energy & XEL \\
+USA -- High ESG & Duke Energy & DUK \\
+USA -- Low ESG & Exxon Mobil & XOM \\
+USA -- Low ESG & Chevron & CVX \\
+USA -- Low ESG & Occidental Petroleum & OXY \\
+EU -- High ESG & Enel & ENEL.MI \\
+EU -- High ESG & Iberdrola & IBE.MC \\
+EU -- High ESG & E.ON & EOAN.DE \\
+EU -- Low ESG & TotalEnergies & TTE.PA \\
+EU -- Low ESG & BP & BP.L \\
+EU -- Low ESG & ENI & ENI.MI \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The sample consists of 12 large-cap energy companies, selected to provide a clear comparison and reliable data in the United States and Europe. Each region includes two groups:
+
+\begin{itemize}
+\item \textbf{Utilities/transition -- High ESG:} United States (NEE, XEL, DUK) and Europe (ENEL.MI, IBE.MC, EOAN.DE). These are regulated companies or businesses focused on grids and renewables, with published climate targets and structured reporting.
+\item \textbf{Oil \& Gas -- Low ESG:} United States (XOM, CVX, OXY) and Europe (TTE.PA, BP.L, ENI.MI). These are large international groups operating across oil and gas, from extraction to distribution.
+\end{itemize}
+
+The reasons for these choices are:
+
+\begin{itemize}
+\item \textbf{Comparability:} having High and Low groups with different business models (utilities/transition versus oil and gas) in both regions allows the results to be read as relative differences within the United States and Europe without confusing them with the sector cycle.
+\item \textbf{Data quality:} all are large-cap companies included in major indices (S\&P 500, FTSE 100, CAC 40, DAX, FTSE MIB, IBEX 35); their size ensures liquidity and complete historical series.
+\item \textbf{Information coverage:} monthly ESG scores are available from Sustainalytics and historical price data from Yahoo Finance, allowing a monthly dataset to be assembled for 2013--2024.
+\item \textbf{Clear economic interpretation:} distinguishing utilities/transition from oil and gas helps determine when an ESG ``signal'' may prevail and when commodity prices and the macroeconomic cycle are more important.
+\end{itemize}
+
+In summary, the company set maximizes consistency and coverage across regions and groups while allowing clear comparisons of size, liquidity and data availability.
+
+\section{Methodology}
+
+Our analysis proceeds in four connected steps. First, we build a monthly longitudinal dataset by combining prices, sector benchmarks and ESG scores. Next, we transform returns into measures relative to each region's benchmark. Third, we test whether ESG levels anticipate relative performance during the following year. Finally, we evaluate \textit{ex post} the risk--return profile of the High and Low groups using an annualized Sharpe ratio and statistical comparisons.
+
+\subsection{Dataset}
+
+We use three monthly data sources: stock prices for the 12 selected US and European companies, benchmark returns for US Energy (XLE) and Europe (STOXX Europe 600 Oil \& Gas, ticker EXH1.DE), and monthly Sustainalytics ESG scores for each stock. Dates are aligned to month ends.
+
+\subsection{Twelve-month Forecasting}
+
+For each stock, we construct relative returns by subtracting its geographic area's benchmark return each month. This separates the stock-specific component from overall energy-sector performance. The aim is to establish whether ESG levels anticipate cumulative relative performance over the following year. For each month $t$, the target is the sum of the 12 future monthly relative returns (from $t+1$ to $t+12$). The explanatory variables are exclusively the ESG scores observed in the preceding month (lag 1: E, S, G and total score). We estimate separate Random Forest models for each geographic region (United States and Europe) and each politically and regulatorily defined time window: 2013--2016 (pre-Trump), 2017--2020 (Trump) and 2021--2024 (Biden). Validation is out of sample with a temporal split: models are trained on the initial months of a window and tested on the final months, with an 80/20 train-to-test ratio in terms of months. The reported metrics are test-set $R^2$ and MAE.
+
+\subsection{Risk--Return Profile}
+
+Following the forecasting analysis, we assess the groups' risk--return profiles. For each period $\times$ region $\times$ ESG group combination, we construct an equal-weight time series of monthly relative returns and calculate the annualized Sharpe ratio (Formula 1). We then compare High and Low using the Sharpe difference, estimate a 95\% confidence interval using a bootstrap over the available months, and report a two-sided p-value. This approach helps establish whether, and when, higher-ESG stocks show a superior risk--return profile compared with lower-ESG stocks, holding the region and period constant.
+
+\[
+\mathrm{Sharpe}_{\mathrm{rel}} =
+\frac{\mathrm{E}[R_{\mathrm{titolo}} - R_{\mathrm{settore}}]}{\sigma(R_{\mathrm{titolo}} - R_{\mathrm{settore}})}\times\sqrt{12}
+\]
+
+\noindent\textit{Formula 1:} Annualized Sharpe ratio: mean return in excess of the stock's sector divided by the standard deviation of excess returns, multiplied by $\sqrt{12}$ to annualize monthly observations.
+
+\section{Results}
+
+\begin{table}[H]
+\centering
+\caption{Twelve-month predictive results from Random Forest}
+\label{tab:rf}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Period} & \textbf{$R^2$ (EU)} & \textbf{$R^2$ (USA)} & \textbf{MAE (EU)} & \textbf{MAE (USA)} \\
+\midrule
+2013--2016 & $-1.399$ & $-0.475$ & $0.123$ & $0.132$ \\
+2017--2020 & $-1.813$ & $-0.395$ & $0.278$ & $0.309$ \\
+2021--2024 & $-1.071$ & $-1.387$ & $0.163$ & $0.201$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As shown in Table~\ref{tab:rf}, the models estimated using the previous month's ESG scores cannot predict cumulative 12-month relative performance: out-of-sample $R^2$ is negative in every period and both regions, while MAE is relatively stable between the United States and Europe. Within our sample, ESG levels do not provide a reliable predictive signal for annual benchmark-relative returns.
+
+\begin{table}[H]
+\centering
+\caption{Aggregated relative Sharpe by group (equal weight, annualized)}
+\label{tab:sharpe}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Period} & \textbf{EU High} & \textbf{EU Low} & \shortstack{$\Delta$ EU\\(High--Low)} & \textbf{USA High} & \textbf{USA Low} & \shortstack{$\Delta$ USA\\(High--Low)} \\
+\midrule
+2013--2016 & $0.152$ & $0.112$ & $0.04$ & $0.431$ & $0.094$ & $0.337$ \\
+2017--2020 & $0.894$ & $-0.782$ & $1.676$ & $0.668$ & $0.042$ & $0.626$ \\
+2021--2024 & $-0.224$ & $0.397$ & $-0.622$ & $-0.667$ & $0.098$ & $-0.765$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:sharpe} summarizes the annualized Sharpe ratio of equal-weight High and Low ESG portfolios by period and region. In the pre-Trump period, the High group's advantage is limited and not uniform. In 2017--2020, the High group shows a more favorable risk--return profile, especially in Europe. In 2021--2024, the ranking reverses: Low ESG groups obtain higher Sharpe ratios on average in both regions.
+
+\begin{table}[H]
+\centering
+\caption{Bootstrap inference for the High--Low ESG Sharpe difference}
+\label{tab:bootstrap}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Period} & $\boldsymbol{\Delta}$\textbf{ EU} & \textbf{95\% CI EU} & \textbf{p-value EU} & $\boldsymbol{\Delta}$\textbf{ USA} & \textbf{95\% CI USA} & \textbf{p-value USA} \\
+\midrule
+2013--2016 & $0.04$ & $[-0.918;\,0.989]$ & $0.93$ & $0.337$ & $[-0.612;\,1.387]$ & $0.588$ \\
+2017--2020 & $1.676$ & $[0.371;\,3.223]$ & $0.53$ & $0.626$ & $[-0.807;\,2.447]$ & $0.576$ \\
+2021--2024 & $-0.622$ & $[-2.101;\,0.848]$ & $0.556$ & $-0.765$ & $[-2.039;\,0.729]$ & $0.513$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:bootstrap} reports the High--Low Sharpe differences with 95\% confidence intervals and bootstrap p-values. The pro-High signal in 2017--2020 is the most consistent, particularly in Europe. In the other periods, the intervals include zero, meaning that given statistical uncertainty the Sharpe difference may be positive, negative or zero. Formally, we cannot exclude $\Delta\mathrm{Sharpe}=0$ ($p$-value $>0.05$), so evidence of a stable advantage is weak.
+
+\section*{Conclusions}
+
+Overall, the patterns observed should not be interpreted as a ``presidential effect'' but as a reflection of the macroeconomic and sector cycle. In 2021--2022, for example, the surge in oil and gas prices gave exceptional support to oil-and-gas stocks (predominantly Low ESG), while rising interest rates and supply-chain bottlenecks weighed on many transition companies. In periods less dominated by commodities, the advantage of higher ESG profiles may return or fade. From a forecasting perspective, ESG scores do not anticipate cumulative 12-month relative performance; however, \textit{ex post}, they are associated with risk--return profiles that vary with the economic context, as shown by the results tables. This suggests caution in using ESG mechanically as a market-timing signal and supports integrating it with macroeconomic and sector variables (commodity prices, interest rates) and traditional risk factors. Our sample is also concentrated on 12 large-cap stocks and specific benchmark and time-window choices. Future extensions to a broader universe, value-weighted portfolios and alternative ESG specifications could further clarify when and why ESG information translates into better risk-adjusted performance.
+
+\end{document}

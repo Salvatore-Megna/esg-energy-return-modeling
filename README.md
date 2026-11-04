@@ -1,5 +1,7 @@
 # ESG Scores and Relative Returns in the Energy Sector
 
+[Project overview — English (PDF)](docs/project-page.pdf) · [Original report — Italian](report/report.pdf) · [Full report — English](report/en/report.pdf)
+
 An analysis of 12 energy companies in the US and Europe between 2013 and 2024. I examine whether monthly ESG scores help predict returns relative to sector benchmarks, and compare the risk-adjusted returns of utility and oil & gas portfolios.
 
 The project uses Random Forest regression for the forecasting exercise and an annualized information ratio for the portfolio comparison.
