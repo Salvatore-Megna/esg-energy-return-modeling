@@ -1,0 +1,48 @@
+name: Validate English ESG report
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PDF verification library
+        run: python -m pip install 'pymupdf>=1.24,<2'
+      - name: Compile English LaTeX translation
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          working_directory: report/en
+      - name: Check pages, numerical results, and source consistency
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import pymupdf
+
+          original = Path("report/main.tex").read_text(encoding="utf-8")
+          english = Path("report/en/main.tex").read_text(encoding="utf-8")
+          rows = lambda t: re.findall(r"^\s*(?:2013--2016|2017--2020|2021--2024)\s*&.+?\\\\$", t, re.M)
+          assert len(rows(original)) == 9
+          assert rows(original) == rows(english)
+          assert all(t.count(r"\begin{table}") == 4 and t.count(r"\[") == 1 for t in (original, english))
+          with pymupdf.open("report/report.pdf") as it, pymupdf.open("report/en/report.pdf") as saved, pymupdf.open("report/en/main.pdf") as built:
+              assert len(it) == len(saved) == len(built) == 5
+              for page_a, page_b in zip(it, built):
+                  assert abs(page_a.rect.width - page_b.rect.width) < 1
+                  assert abs(page_a.rect.height - page_b.rect.height) < 1
+              text = "\n".join(page.get_text() for page in built)
+              for label in ("ESG and Performance", "Random Forest", "Results", "Conclusions"):
+                  assert label in text
+          print("ESG bilingual report: 5 A4 pages and 9 historical numerical rows verified.")
+          PY
